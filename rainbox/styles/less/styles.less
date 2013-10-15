@@ -1,0 +1,167 @@
+/*--------------------------------------------------------------------
+ * Licensed under GNU GPLv2 (c) Hassadee Pimsuwan - hapztron@gmail.com
+ * ---------------------------------------------------------------- */
+@import "reset.css";
+@import "x3dom.css";
+
+/* Start: Mixins */
+.box-shadows (@ap: 0 0 5px; @color: #333) when (iscolor(@color)) {
+	-moz-box-shadow:	@ap @color;
+	-webkit-box-shadow:	@ap @color;
+	-ms-box-shadow:		@ap @color;
+	-o-box-shadow:		@ap @color;
+	box-shadow:			@ap @color;
+}
+
+.opacities (@opa: 0.75) {
+	@ms-opa: (@opa * 100);
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=@ms-opa)";
+	filter: alpha(opacity=@ms-opa);
+	-moz-opacity: @opa;
+	-khtml-opacity: @opa;
+	opacity: @opa;
+}
+/* End: Mixins */
+
+/* Start: Text */
+body {
+	background: #F0F0F0;
+	overflow: hidden;
+
+	color: #FFF;
+	font-family: "HelveticaNeue-Light", "HelveticaNeue", Helvetica, sans-serif;
+	font-size: 14px;
+	-webkit-font-smoothing: antialiased;
+}
+h1 {
+	font-size: 28px;
+	font-weight: 300;
+}
+h2 { font-size: 23px; }
+h3 { font-size: 21px; }
+h4 { font-size: 19px; }
+h5 { font-size: 17px; }
+h6 { font-size: 15px; }
+p, h1, h2, h3, h4, h5, h6, ul {	margin-bottom: 10px; }
+
+article, aside, dialog, figure, footer, header, menu, nav, section { display: block; }
+
+a {
+	text-decoration: none; 
+	color: #F4F4F4;
+}
+/* END: Text */
+
+#container {
+	width: 100%;
+	background: #F0F0F0;
+	margin: 0 auto 0 auto;
+}
+	#container > header {
+		background: transparent;
+		.box-shadows(0 0 10px; #333);
+		line-height: 45px;
+		margin: 0 auto 0 auto;
+		position: absolute;
+		overflow: hidden;
+		width: 100%;
+		height: 45px;
+		z-index: 1;
+	}
+	#container > header h1 {
+		margin: 0 auto 0 25px;
+		z-index: 2;
+	}
+	#container > header li,
+	#container > footer li {
+		float: left;
+	}
+
+	#container > header,
+	#container > nav,
+	#container > aside,
+	#container > footer {
+		z-index: 99;
+	}
+
+	#container > section {
+		background: #F0F0F0;
+	}
+	#container > aside {
+		background: #333;
+		width: 250px;
+		padding: 10px;
+		position: absolute;
+			top: 60px;
+			right: 15px;
+		.opacities(0.90);
+		overflow: hidden;
+	}
+	#container > aside ul {
+		clear: both;
+	}
+	#container > aside li {
+		background: #000;
+		border: 1px solid #777;
+		cursor: pointer;
+		float: left;
+		font-size: 12px;
+		line-height: 42px;
+		margin: 5px 5px 0 0;
+		padding: 5px;
+		overflow: hidden;
+		text-align: center;
+		.opacities(0.75);
+		width: 45px;
+		height: 45px;
+	}
+		#container > aside li:hover {
+			.opacities(1.0);
+		}
+
+  	#container > footer {
+		background: transparent;
+		position: fixed;
+			bottom: 0px;
+		overflow-x: hidden;
+		width: 100%;
+		height: 45px;
+  	}
+	#container > footer ul {
+		margin: 5px auto 0 auto;
+		width: 100%;
+	}
+		#container > footer li {
+			font-size: 14px;
+			line-height: 30px;
+			margin: 0 5px 0 25px;
+			padding: 0 5px 0 5px;
+			height: 40px;
+		}
+	#container > footer a {
+		line-height: 22px;
+	}
+
+#x3dom-scene {
+	background: #000;
+	background: -moz-radial-gradient(50% 50%, farthest-side, #5389CC, #000);
+  	background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 750, from(#5389CC), to(#000));
+	border: 0;
+	position: absolute;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+#x3dom-state-viewer {
+	display: none;
+}
+
+.x3dom-canvas {
+	border: none;
+	cursor: pointer;
+	float: left;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}

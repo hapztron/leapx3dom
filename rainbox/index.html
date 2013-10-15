@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta name="keywords" content="HTML, XML, JS, WebGL, X3D, X3DOM, Rainbox" />
+		<meta name="desctription" content="Rainbox - WebGL/X3DOM Experiment" />
+		<meta name="author" content="Hassadee Pimsuwan" />
+		<meta name="genarator" content="Sublime Text" />
+
+		<meta property="og:title" content="Rainbox - RGB Boxes : WebGL/X3DOM Experiment"/>
+		<meta property="og:type" content="website"/> 
+		<meta property="og:image" content="http://rgb-boxes.appspot.com/images/rainbox.png"/> 
+		<meta property="og:url" content="http://rgb-boxes.appspot.com/"/>
+		<meta property="og:site_name" content="Hassadee Pimsuwan"/>
+		<meta property="og:description" content="Rainbox - RGB Boxes : Web3D Experiment by using WebGL/ X3DOM"/>
+		<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<title>Rainbox - RGB Boxes: WebGL/X3DOM Experiment</title>
+
+		<link rel="shortcut icon" href="styles/favicon/favicon.ico" type="image/x-icon"/>
+		<link rel="stylesheet" type="text/css" href="styles/styles.css" />
+
+		<script type="text/javascript">		
+			document.onload = function() {
+				createScene();
+			};
+		</script>
+	</head>
+	<body>
+		<article id="container">
+			<header>
+				<h1>Rainbox - RGB Boxes</h1>
+			</header>
+
+			<section>
+				<x3d id='x3dom-scene'>
+					<param name='showStat' value='false'></param>
+					<param name='PrimitiveQuality' value='high'></param>
+					<param name='disableDoubleClick' value='true'></param>
+					<scene>
+						<viewpoint position='0 0 40'></viewpoint>
+						<transform id='translation'>
+							<transform id='rotation_yaw' rotation='0 1 0 0'>
+								<transform id='rotation_roll' rotation='1 0 0 0'>
+									<transform id='CubeAppear' translation='0 0 0'></transform>
+								</transform>
+							</transform>
+						</transform>
+					</scene>
+				</x3d>
+			</section>
+
+			<footer>
+				<ul>
+					<li>
+						&copy; 2013 <a href="http://hassadee.com" target="_blank">Hassadee Pimsuwan</a>
+					</li>
+					<li>
+						Powered by <a href="http://www.x3dom.com" target="_blank">X3DOM</a>
+					</li>
+					<li>
+						Leap Motion Status: <span id='leapstation'>Not Available</span>
+					</li>
+				</ul>
+			</footer>
+		</article>
+
+		<script type="text/javascript" src="scripts/x3dom.js"></script>
+		<script type="text/javascript" src="scripts/rainbox.js"></script>
+		<script type="text/javascript" src="scripts/leap.min.js"></script>
+		<script type="text/javascript">
+			/* Start: Disable X3DOM's key event */
+			document.onkeydown = function (e) {
+		        if (e.which == 8 
+		        	|| e.which == 32 
+		        	|| e.which == 68 
+		        	|| e.which == 70 
+		        	|| e.which == 76 
+		        	|| e.which == 87) {
+		        	console.log('Disable');
+	                return false;
+		        }
+			}
+			/* End: Disable X3DOM's key event */
+
+			/* Start: Leap Motion's Gesture */
+			var controller = new Leap.Controller({enableGestures: true});
+			var transx = transy = transz = rotationx = rotationy = 0;
+			var ROTATION_INC = 0.005;
+			var DISTANCE_CHK = 20;
+			controller.loop(function(frame) {
+		        if (frame.hands.length == 2) {
+		        	// Moves, Zoom in-out
+			        if ((frame.hands.length == 2) && ((frame.hands[0].fingers.length == 5) && (frame.hands[1].fingers.length == 5))) {
+			        	transx = (((frame.hands[0].palmPosition[0] + frame.hands[1].palmPosition[0]) / 2) / 5);
+			        	transy = (((frame.hands[0].palmPosition[1] + frame.hands[1].palmPosition[1]) / 2) / 3) - 100;
+			        	transz = (((frame.hands[0].palmPosition[2] + frame.hands[1].palmPosition[2]) / 2) / 5);
+				        translation.setAttribute('translation', transx + ' ' + transy + ' ' + transz);
+					}
+			    } else if ((frame.hands.length == 1) && (frame.hands[0].fingers.length == 5)) {
+			    	// Rotate Roll
+		    		if (frame.hands[0].palmPosition[0] < -DISTANCE_CHK) {
+			    		rotationy -= ROTATION_INC;
+			    	} else if (frame.hands[0].palmPosition[0] > DISTANCE_CHK) {
+			    		rotationy += ROTATION_INC;
+			    	}
+			    	rotation_yaw.setAttribute('rotation', '0 1 0 ' + rotationy);
+
+			    	// Rotate Yaw
+			    	if (frame.hands[0].palmPosition[2] < -DISTANCE_CHK) {
+			    		rotationx -= ROTATION_INC;
+			    	} else if (frame.hands[0].palmPosition[2] > DISTANCE_CHK) {
+			    		rotationx += ROTATION_INC;
+			    	}
+			    	rotation_roll.setAttribute('rotation', '1 0 0 ' + rotationx);
+			    }
+			});
+			/* End: Leap Motion's Gesture */
+
+			/* Start: Leap Motion's Status */
+			controller.on('ready', function() {
+				document.getElementById('leapstation').innerHTML = "Ready";
+			});
+			controller.on('disconnect', function() {
+				document.getElementById('leapstation').innerHTML = "Disconnect";
+			});
+			controller.on('focus', function() {
+				document.getElementById('leapstation').innerHTML = "Available!";
+			});
+			controller.on('deviceConnected', function() {
+				document.getElementById('leapstation').innerHTML = "Device Connected";
+			});
+			controller.on('deviceDisconnected', function() {
+				document.getElementById('leapstation').innerHTML = "Device Disconnected";
+			});
+			/* End: Leap Motion's Status */
+		</script>
+	</body>
+</html>
